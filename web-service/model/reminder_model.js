@@ -5,9 +5,8 @@ const reminderSchema = new Schema({
     title: String,
     description: String,
     duedate: String,
-    reminddate: String,
     remindin: Number,
-    remindbefore: Number,
+    type: String,
     created_at: {type: Date, default: Date.now() },
     updated_at: {type: Date, default: Date.now() }
 })
