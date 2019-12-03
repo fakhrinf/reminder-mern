@@ -22,4 +22,4 @@ app.use('/api/', reminder)
 app.use('/api/', setting)
 
 app.use(express.static('../reminder-arga/build'))
-app.listen(8000)
+app.listen(3001)

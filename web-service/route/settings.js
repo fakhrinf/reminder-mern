@@ -9,24 +9,19 @@ router.route('/settings/:id?')
         }).catch(err => res.status(400).send(err))
     })
     .post(function(req, res) {
-        if(req.params.id) {
-            let setting = new settingModel({
-                'sendtime': req.body.sendtime,
-                'receiveremail': req.body.receiveremail
-            })
+        let setting = new settingModel({
+            'sendtime': req.body.sendtime,
+            'receiveremail': req.body.receiveremail
+        })
 
-            setting.save(err => {
-                if(err) res.status(400).send(err)
+        setting.save(err => {
+            if(err) res.status(400).send(err)
 
-                res.status(200).json(setting)
-            })
-
-        }else{
-            res.sendStatus(400)
-        }
+            res.status(200).json(setting)
+        })
     })
     .put(function(req, res) {
-        if(req.param.id) {
+        if(req.params.id) {
             settingModel.findOneAndUpdate({'_id': req.params.id}, {
                 'sendtime': req.body.sendtime,
                 'receiveremail': req.body.receiveremail
