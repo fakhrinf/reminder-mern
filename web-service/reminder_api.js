@@ -3,7 +3,7 @@ const bodyparser = require('body-parser')
 const cors = require('cors')
 const logger = require('morgan')
 const reminder = require('./route/reminder')
-const user = require('./route/user')
+const setting = require('./route/settings')
 const mongoose = require('mongoose')
 
 const app = express()
@@ -19,7 +19,7 @@ mongoose.connect("mongodb://localhost:27017/reminderdb", {useNewUrlParser: true,
 }).catch(err => console.log(err))
 
 app.use('/api/', reminder)
-app.use('/api/', user)
+app.use('/api/', setting)
 
 app.use(express.static('../reminder-arga/build'))
 app.listen(8000)

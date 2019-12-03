@@ -10,7 +10,7 @@ class App extends React.Component {
   render() {
     return(
       <div className="App">
-        <MainAppBar/>
+        <MainAppBar title="Remainder Apps"/>
         <ReminderList/>
       </div>
     )
