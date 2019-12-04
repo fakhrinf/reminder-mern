@@ -50,6 +50,8 @@ class MainAppBar extends React.Component {
     }
 
     this.handleChange = this.handleChange.bind(this)
+
+    this.getSettingData()
   }
 
   getSettingData = () => {
@@ -59,10 +61,6 @@ class MainAppBar extends React.Component {
         this.setState({ settingid: dt._id, receiveremail: dt.receiveremail, sendtime: dt.sendtime })
       }
     }).catch(err => console.log(err))
-  }
-
-  componentDidMount() {
-    this.getSettingData()
   }
 
   componentWillUnmount() {

@@ -18,6 +18,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import http from '../helper/api'
 
 const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -39,8 +40,13 @@ const tableIcons = {
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
   };
 
-export default function ReminderList() {
-    const [state, setState] = React.useState({
+class ReminderList extends React.Component {
+
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      data : [],
       columns: [
         { title: 'Title', field: 'title' },
         { title: 'Description', field: 'desc' },
@@ -52,58 +58,102 @@ export default function ReminderList() {
           lookup: { 'DOC': 'Document', 'BDAY': 'Birthday' },
         },
       ],
-      data: [
-        { title: 'Reminder 1', desc: 'lorem ipsum sit dolor amet', duedate: '2019-12-15', remindin: 7, type: "DOC" },
-        { title: 'Reminder 2', desc: 'lorem ipsum sit dolor amet', duedate: '2019-12-15', remindin: 7, type: "BDAY" },
-        { title: 'Reminder 3', desc: 'lorem ipsum sit dolor amet', duedate: '2019-12-15', remindin: 7, type: "DOC" },
-      ],
-    });
-  
-    return (
-        <Container Style="margin-top:40px;margin-bottom:20px;">
-            <MaterialTable
-                icons={tableIcons}
-                title="Reminder List"
-                columns={state.columns}
-                data={state.data}
-                editable={{
-                onRowAdd: newData =>
-                    new Promise(resolve => {
-                    setTimeout(() => {
-                        resolve();
-                        setState(prevState => {
+    }
+
+    this.getdata()
+  }
+
+  getdata = () => {
+    http.get("/reminder").then(data => {
+      if(data.status == 200) {
+        const json = data.data
+        let reminder = []
+        json.forEach(rm => {
+          reminder.push({id: rm._id, title: rm.title, desc: rm.description, duedate: rm.duedate, remindin: rm.remindin, type: rm.type})
+        })
+
+        this.setState({ data: reminder })
+        
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      data : [],
+    })
+  }
+
+  render() {
+    return(
+      <Container Style="margin-top:40px;margin-bottom:20px;">
+        <MaterialTable
+            icons={tableIcons}
+            title="Reminder List"
+            columns={this.state.columns}
+            data={this.state.data}
+            editable={{
+            onRowAdd: newData =>
+                new Promise((resolve, reject) => {
+
+                  http.post("/reminder", newData).then(rs => {
+                    if(rs.status == 200) {
+                      resolve()
+                      this.setState(prevState => {
                         const data = [...prevState.data];
                         data.push(newData);
                         return { ...prevState, data };
-                        });
-                    }, 600);
-                    }),
-                onRowUpdate: (newData, oldData) =>
-                    new Promise(resolve => {
-                    setTimeout(() => {
-                        resolve();
-                        if (oldData) {
-                        setState(prevState => {
+                      });
+                    }else{
+                      reject()
+                    }
+                  }).catch(err => {
+                    reject()
+                    console.log(err);
+                  });
+
+                }),
+            onRowUpdate: (newData, oldData) =>
+                new Promise((resolve, reject) => {
+                  http.put(`/reminder/${oldData.id}`, newData).then(rm => {
+                    if(rm.status == 200) {
+                      resolve();
+                      if (oldData) {
+                        this.setState(prevState => {
                             const data = [...prevState.data];
                             data[data.indexOf(oldData)] = newData;
                             return { ...prevState, data };
                         });
-                        }
-                    }, 600);
-                    }),
-                onRowDelete: oldData =>
-                    new Promise(resolve => {
-                    setTimeout(() => {
-                        resolve();
-                        setState(prevState => {
-                        const data = [...prevState.data];
-                        data.splice(data.indexOf(oldData), 1);
-                        return { ...prevState, data };
-                        });
-                    }, 600);
-                    }),
-                }}
-            />
-        </Container>
-    );
+                      }
+                    }else{
+                      reject()
+                    }
+                  })
+                }),
+            onRowDelete: oldData =>
+              new Promise((resolve, reject) => {
+                http.delete(`/reminder/${oldData.id}`).then(rm => {
+                  if(rm.status == 200) {
+                    resolve()
+                    this.setState(prevState => {
+                      const data = [...prevState.data];
+                      data.splice(data.indexOf(oldData), 1);
+                      return { ...prevState, data };
+                      });
+                  }else{
+                    reject()
+                  }
+                }).catch(err => {
+                  reject()
+                })
+              }),
+            }}
+          />
+      </Container>
+    )
   }
+}
+
+export default ReminderList

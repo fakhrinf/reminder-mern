@@ -99,8 +99,7 @@ router.route('/reminder/:id?')
                 "description": req.body.desc,
                 "duedate": req.body.duedate,
                 "remindin": req.body.remindin,
-                "remindbefore": req.body.remindbefore,
-                "reminddate": req.body.reminddate
+                "type": req.body.type,
             })
     
             reminder.save(function(err) {
