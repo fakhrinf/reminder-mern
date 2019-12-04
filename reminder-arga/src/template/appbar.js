@@ -16,11 +16,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
-import axios from 'axios'
-
-const http = axios.create({
-  baseURL: "http://localhost:3001/api"
-})
+import http from '../helper/api'
 
 const useStyles = theme => ({
   root: {
