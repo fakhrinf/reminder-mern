@@ -14,7 +14,7 @@ app.use(bodyparser.json())
 app.use(cors())
 app.use(logger('dev'))
 
-mongoose.connect("mongodb://localhost:27017/reminderdb", {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
+mongoose.connect("mongodb://reminder:!!reminder!!@localhost:27017/reminderdb", {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
     console.log("Mongodb Connected");
 }).catch(err => console.log(err))
 
