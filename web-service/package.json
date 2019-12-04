@@ -16,6 +16,7 @@
     "moment": "^2.24.0",
     "mongoose": "^5.7.13",
     "morgan": "^1.9.1",
+    "node-cron": "^2.0.3",
     "nodemailer": "^6.3.1"
   }
 }

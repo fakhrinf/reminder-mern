@@ -5,6 +5,8 @@ const logger = require('morgan')
 const reminder = require('./route/reminder')
 const setting = require('./route/settings')
 const mongoose = require('mongoose')
+const cronjob = require('node-cron')
+const sendremainder = require('./services/sendreminder')
 
 const app = express()
 
@@ -20,6 +22,8 @@ mongoose.connect("mongodb://reminder:!!reminder!!@localhost:27017/reminderdb", {
 
 app.use('/api/', reminder)
 app.use('/api/', setting)
+
+sendremainder.start()
 
 app.use(express.static('../reminder-arga/build'))
 app.listen(3000)
