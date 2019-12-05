@@ -73,10 +73,8 @@ const mailService = {
 
             const cron = cronjob.schedule(`0 ${getSetting[0].sendtime} * * *`, () => {
                 reminderModel.find({}).then(remainderdata => {
-                    remainderdata.forEach(rm => {
-                        var duedate = moment(rm.duedate, "YYYY-MM-DD").format("MM-DD")
-                        
-                        var ckremind = moment(`${moment().year()}-${duedate}`, "YYYY-MM-DD").subtract(rm.remindin,'days').format("YYYY-MM-DD")
+                    remainderdata.forEach(rm => {                       
+                        var ckremind = moment(rm.duedate, "YYYY-MM-DD").subtract(rm.remindin,'days').format("YYYY-MM-DD")
                         // console.log(`${duedate} remind me at ${ckremind}`);
                         
                         var diff = moment().diff(ckremind, 'days')
