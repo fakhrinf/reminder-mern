@@ -125,7 +125,8 @@ router.route('/reminder/:id?')
                 "remindin": req.body.remindin,
                 "remindbefore": req.body.remindbefore,
                 "reminddate": req.body.reminddate,
-                "updated_at": Date.now()
+                "updated_at": Date.now(),
+                "type": req.body.type
             }, { 
                 new: true 
             }, function(err, data) {
