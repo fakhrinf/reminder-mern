@@ -2,6 +2,8 @@ import React from 'react';
 import Container from '@material-ui/core/Container'
 import MaterialTable from 'material-table';
 import { forwardRef } from 'react';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -50,7 +52,24 @@ class ReminderList extends React.Component {
       columns: [
         { title: 'Title', field: 'title' },
         { title: 'Description', field: 'desc' },
-        { title: 'Duedate', field: 'duedate' },
+        { 
+          title: 'Duedate', 
+          field: 'duedate',
+          editComponent: props => (
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                margin="none"
+                id="date-picker-dialog"
+                format="yyyy-MM-dd"
+                value={props.value}
+                onChange={e => props.onChange(e)}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+              />
+            </MuiPickersUtilsProvider>
+          ) 
+        },
         { title: 'Remind in', field: 'remindin', type: 'numeric' },
         {
           title: 'Type',
@@ -65,7 +84,7 @@ class ReminderList extends React.Component {
 
   getdata = () => {
     http.get("/reminder").then(data => {
-      if(data.status == 200) {
+      if(data.status === 200) {
         const json = data.data
         let reminder = []
         json.forEach(rm => {
@@ -94,12 +113,15 @@ class ReminderList extends React.Component {
             title="Reminder List"
             columns={this.state.columns}
             data={this.state.data}
+            options={{
+              actionsColumnIndex: 5
+            }}
             editable={{
             onRowAdd: newData =>
                 new Promise((resolve, reject) => {
 
                   http.post("/reminder", newData).then(rs => {
-                    if(rs.status == 200) {
+                    if(rs.status === 200) {
                       resolve()
                       this.setState(prevState => {
                         const data = [...prevState.data];
@@ -118,7 +140,7 @@ class ReminderList extends React.Component {
             onRowUpdate: (newData, oldData) =>
                 new Promise((resolve, reject) => {
                   http.put(`/reminder/${oldData.id}`, newData).then(rm => {
-                    if(rm.status == 200) {
+                    if(rm.status === 200) {
                       resolve();
                       if (oldData) {
                         this.setState(prevState => {
@@ -135,7 +157,7 @@ class ReminderList extends React.Component {
             onRowDelete: oldData =>
               new Promise((resolve, reject) => {
                 http.delete(`/reminder/${oldData.id}`).then(rm => {
-                  if(rm.status == 200) {
+                  if(rm.status === 200) {
                     resolve()
                     this.setState(prevState => {
                       const data = [...prevState.data];

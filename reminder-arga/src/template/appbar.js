@@ -52,7 +52,7 @@ class MainAppBar extends React.Component {
 
   getSettingData = () => {
     http.get("/settings").then(data => {
-      if(data.status == 200) {
+      if(data.status === 200) {
         const dt = data.data[0]      
         this.setState({ settingid: dt._id, receiveremail: dt.receiveremail, sendtime: dt.sendtime })
       }
@@ -87,7 +87,7 @@ class MainAppBar extends React.Component {
   }
 
   manageSetting = () => {
-    if(this.state.settingid == 0) {
+    if(this.state.settingid === 0) {
       http.post("/settings", {
         "sendtime": this.state.sendtime,
         "receiveremail": this.state.receiveremail,
