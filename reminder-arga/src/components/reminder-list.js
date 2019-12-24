@@ -21,6 +21,7 @@ import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import http from '../helper/api'
+import moment from 'moment'
 
 const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -62,7 +63,7 @@ class ReminderList extends React.Component {
                 id="date-picker-dialog"
                 format="yyyy-MM-dd"
                 value={props.value}
-                onChange={e => props.onChange(e)}
+                onChange={e => props.onChange(moment(e).format("YYYY-MM-DD"))}
                 KeyboardButtonProps={{
                   'aria-label': 'change date',
                 }}
